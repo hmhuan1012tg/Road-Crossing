@@ -18,16 +18,14 @@ void Player::clear_from_buffer(){
 		handle.clear(m_pivot_x + tmp_x[i], m_pivot_y + tmp_y[i]);
 }
 
-Player::Player(int x, int y) : PhysicBody(x, y){
-	draw_to_buffer();
-}
+Player::Player(int x, int y) : PhysicBody(x, y), m_point(0){}
 
 Player::~Player(){
 	clear_from_buffer();
 }
 
-int Player::get_y(){
-	return m_pivot_y;
+int Player::get_point() {
+	return m_point;
 }
 
 void Player::move_left(){
@@ -49,8 +47,10 @@ void Player::move_right(){
 void Player::move_up(){
 	FrameHandler::get_handler().lock();
 	clear_from_buffer();
-	if (m_pivot_y == 1)
+	if (m_pivot_y == 1) {
 		m_pivot_y = MAP_HEIGHT - 4;
+		m_point++;
+	}
 	else
 		m_pivot_y -= 4;
 	draw_to_buffer();

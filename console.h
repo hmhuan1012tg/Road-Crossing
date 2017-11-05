@@ -23,6 +23,8 @@
 #define ColorCode_Yellow		14
 #define ColorCode_White			15
 #define ColorCode_MenuChoice    240
+#define ColorCode_RedBG			192
+#define ColorCode_GreenBG		160
 
 #define MENU_X 25
 #define MENU_Y 8

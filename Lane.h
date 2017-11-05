@@ -7,15 +7,24 @@
 #include <ctime>
 #include <algorithm>
 
+enum class ObstacleType{
+	Bird, Dinosaur, Car, Truck,
+};
+
 class Lane{
 private:
 	vector<Obstacle*> m_obstacles;
+	vector<int> m_start;
 	bool m_traffic_light;
-
-	static const int MAX_OBSTACLE = 7;
+	ObstacleType m_type;
+	Direction m_dir;
+	int m_order;
 public:
-	Lane(int);
+	Lane(int, int);
+	Lane(const Lane& lane);
 	~Lane();
+
+	Lane& operator=(const Lane& lane);
 
 	void draw_to_buffer();
 	void clear_from_buffer();

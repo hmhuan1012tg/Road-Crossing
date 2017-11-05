@@ -12,6 +12,9 @@ public:
 	PhysicBody(int, int);
 	virtual ~PhysicBody();
 
+	int get_x() { return m_pivot_x; }
+	int get_y() { return m_pivot_y; }
+
 	virtual void draw_to_buffer() = 0;
 	virtual void clear_from_buffer() = 0;
 

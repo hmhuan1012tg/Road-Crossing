@@ -35,7 +35,7 @@ void Dinosaur::clear_from_buffer(){
 
 Dinosaur::Dinosaur(int x, int y, Direction dir) : Obstacle(x, y, dir){}
 
-Dinosaur::~Dinosaur(){}
+Dinosaur::~Dinosaur() {}
 
 /*----------------------------------Bird---------------------------------------*/
 void Bird::draw_to_buffer(){

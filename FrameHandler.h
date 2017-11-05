@@ -6,6 +6,8 @@ enum class Symbol: char{
 	Border,
 	White,
 	Black,
+	Red,
+	Green,
 };
 
 class FrameHandler{
@@ -20,7 +22,7 @@ private:
 public:
 	static FrameHandler& get_handler();
 	
-	void fill(int, int);
+	void fill(int, int, Symbol s = Symbol::White);
 	void clear(int, int);
 
 	void lock();

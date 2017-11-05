@@ -11,9 +11,9 @@ bool PhysicBody::collide_with(const PhysicBody& p) const{
 }
 
 void PhysicBody::move_right(){
-	m_pivot_x = (m_pivot_x) % (MAP_WIDTH - 4) + 1;
+	m_pivot_x = (m_pivot_x - 1) % (MAP_WIDTH - 6) + 2;
 }
 
 void PhysicBody::move_left(){
-	m_pivot_x = (m_pivot_x + MAP_WIDTH - 6) % (MAP_WIDTH - 4) + 1;
+	m_pivot_x = (m_pivot_x + MAP_WIDTH - 9) % (MAP_WIDTH - 6) + 2;
 }

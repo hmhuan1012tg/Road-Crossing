@@ -5,7 +5,7 @@
 FrameHandler::FrameHandler(){
 	for (int i = 0; i < MAP_HEIGHT; i++)
 		for (int j = 0; j < MAP_WIDTH; j++){
-			if (i % 4 == 0 || j == 0 || j == MAP_WIDTH - 1)
+			if (i % 4 == 0 || j < 2 || j > MAP_WIDTH - 3)
 				s_temp[i * MAP_WIDTH + j] = s_next[i * MAP_WIDTH + j] = Symbol::Border;
 			else
 				s_temp[i * MAP_WIDTH + j] = s_next[i * MAP_WIDTH + j] = Symbol::Black;
@@ -20,8 +20,8 @@ FrameHandler& FrameHandler::get_handler(){
 	return handler;
 }
 
-void FrameHandler::fill(int x, int y){
-	s_temp[y*MAP_WIDTH + x] = Symbol::White;
+void FrameHandler::fill(int x, int y, Symbol s){
+	s_temp[y*MAP_WIDTH + x] = s;
 }
 
 void FrameHandler::clear(int x, int y){
@@ -49,7 +49,12 @@ void FrameHandler::render(){
 				else if (s == Symbol::Border)
 					cout << "*";
 				else{
-					setColor(ColorCode_MenuChoice);
+					if (s == Symbol::White)
+						setColor(ColorCode_MenuChoice);
+					if (s == Symbol::Green)
+						setColor(ColorCode_GreenBG);
+					if (s == Symbol::Red)
+						setColor(ColorCode_RedBG);
 					cout << " ";
 					setColor(ColorCode_White);
 				}

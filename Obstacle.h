@@ -15,6 +15,8 @@ public:
 	Obstacle(int, int, Direction);
 	virtual ~Obstacle();
 
+	Direction get_dir() { return m_dir; }
+
 	void move();
 };
 
