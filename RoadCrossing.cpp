@@ -11,6 +11,6 @@ int main(){
 	cin.get();
 
 	delete gm;
-	
+
 	return 0;
 }

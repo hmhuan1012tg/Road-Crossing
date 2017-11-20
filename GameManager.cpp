@@ -6,16 +6,7 @@ GameManager::GameManager(){
 	m_lane_num = (MAP_HEIGHT - 1) / 4 - 1;
 	srand(static_cast<unsigned int>(time(0)));
 	for (int i = 0; i < m_lane_num; i++){
-		m_lanes.emplace_back(new Lane(1, i));
-		
-		int speed = rand() % MIN_SPEED + 1;
-		int trf_intvl = rand() % (MAX_INTERVAL - MIN_INTERVAL) + MIN_INTERVAL;
-		
-		m_speed_per_frame.push_back(speed);
-		m_traffic_interval.push_back(trf_intvl);
-		
-		m_max_frame.push_back(speed * trf_intvl);
-		m_frame_count.push_back(0);
+		m_lanes.push_back(new Lane(1, i));
 	}
 
 	p_player = new Player(rand() % (MAP_WIDTH - 6) + 2, MAP_HEIGHT - 4);
@@ -29,12 +20,6 @@ GameManager::GameManager(const GameManager& gm) {
 	m_lane_num = gm.m_lane_num;
 	for (auto i = gm.m_lanes.begin(); i != gm.m_lanes.end(); i++)
 		m_lanes.emplace_back(new Lane(*(*i)));
-
-	m_speed_per_frame = gm.m_speed_per_frame;
-	m_traffic_interval = gm.m_traffic_interval;
-	
-	m_frame_count = gm.m_frame_count;
-	m_max_frame = gm.m_max_frame;
 	
 	m_game_over = gm.m_game_over;
 	m_is_paused = gm.m_is_paused;
@@ -68,12 +53,6 @@ GameManager& GameManager::operator=(const GameManager& gm) {
 	m_lane_num = gm.m_lane_num;
 	for (auto i = gm.m_lanes.begin(); i != gm.m_lanes.end(); i++)
 		m_lanes.emplace_back(new Lane(*(*i)));
-
-	m_speed_per_frame = gm.m_speed_per_frame;
-	m_traffic_interval = gm.m_traffic_interval;
-
-	m_frame_count = gm.m_frame_count;
-	m_max_frame = gm.m_max_frame;
 
 	m_game_over = gm.m_game_over;
 	m_is_paused = gm.m_is_paused;
@@ -141,12 +120,8 @@ void GameManager::init(){
 void GameManager::loop(){
 	while (!m_game_over){
 		for (int i = 0; i < m_lane_num; i++){
-			m_frame_count[i] = (m_frame_count[i] + 1) % m_max_frame[i];
-			if (m_frame_count[i] % m_traffic_interval[i] == 0)
-				m_lanes[i]->switch_light();
 			m_lanes[i]->clear_from_buffer();
-			if (m_frame_count[i] % m_speed_per_frame[i] == 0)
-				m_lanes[i]->move();
+			m_lanes[i]->move();
 			if (m_lanes[i]->collide_with(*p_player))
 				m_game_over = true;
 			m_lanes[i]->draw_to_buffer();
@@ -160,9 +135,9 @@ void GameManager::loop(){
 	}
 }
 
-void GameManager::level_up() {
+void GameManager::level_up(HANDLE t) {
+	pause(t);
 	m_level++;
-	FrameHandler::get_handler().lock();
 	for (int i = 0; i < m_lane_num; i++)
 		if (m_lanes[i])
 			delete m_lanes[i];
@@ -170,18 +145,9 @@ void GameManager::level_up() {
 
 	srand(static_cast<unsigned int>(time(0)));
 	for (int i = 0; i < m_lane_num; i++) {
-		m_lanes.emplace_back(new Lane(m_level, i));
-
-		int speed = rand() % MIN_SPEED + 1;
-		int trf_intvl = rand() % (MAX_INTERVAL - MIN_INTERVAL) + MIN_INTERVAL;
-
-		m_speed_per_frame.push_back(speed);
-		m_traffic_interval.push_back(trf_intvl);
-
-		m_max_frame.push_back(speed * trf_intvl);
-		m_frame_count.push_back(0);
+		m_lanes.push_back(new Lane(m_level, i));
 	}
-	FrameHandler::get_handler().unlock();
+	resume(t);
 }
 
 void GameManager::run() {
@@ -193,6 +159,8 @@ void GameManager::run() {
 		_getch();
 		system("cls");
 	}
+
+	PlaySound(TEXT("HappyEnd-BackNumber.wav"), NULL, SND_FILENAME | SND_ASYNC);
 
 	thread t([&] { init(); loop(); });
 
@@ -218,10 +186,8 @@ void GameManager::run() {
 			}
 		}
 		if (p_player->get_point() - prev_point == 1) {
-			pause(t.native_handle());
-			level_up();
+			level_up(t.native_handle());
 			prev_point = p_player->get_point();
-			resume(t.native_handle());
 		}
 	}
 
@@ -249,8 +215,9 @@ void GameManager::reset(HANDLE t) {
 		pre_paused = p_reset_ver->m_is_paused;
 		*this = *p_reset_ver;
 	}
-	if (!pre_paused)
-		m_is_paused = true;
-	resume(t);
 	init();
+	m_is_paused = true;
+	resume(t);
+	if (pre_paused)
+		pause(t);
 }

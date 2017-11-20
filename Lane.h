@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Obstacle.h"
+#include "TrafficLight.h"
 #include <vector>
 #include <ctime>
 #include <algorithm>
@@ -11,12 +12,16 @@ class Lane{
 private:
 	vector<Obstacle*> m_obstacles;
 	vector<int> m_start;
-	bool m_traffic_light;
+	
+	TrafficLight* m_traffic_light;
 	Direction m_dir;
 	int m_order;
 
-	void lock_move();
-	void unlock_move();
+	bool m_move_lock;
+	int m_frame_per_move;
+	int m_frame_count;
+	static const int MAX_FRAME_PER_MOVE = 8;
+	static const int MIN_FRAME_PER_MOVE = 2;
 public:
 	Lane(int, int);
 	Lane(const Lane& lane);
@@ -26,8 +31,6 @@ public:
 
 	void draw_to_buffer();
 	void clear_from_buffer();
-
-	void switch_light();
 
 	void move();
 	bool collide_with(const PhysicBody&);

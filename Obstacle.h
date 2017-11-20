@@ -15,6 +15,8 @@ public:
 	Obstacle(int, int, Direction);
 	virtual ~Obstacle();
 
+	Direction get_dir() { return m_dir; }
+
 	virtual Obstacle* clone() = 0;
 
 	void move();
@@ -28,7 +30,7 @@ public:
 	virtual void draw_to_buffer() override;
 	virtual void clear_from_buffer() override;
 
-	virtual Obstacle* clone() override{
+	virtual Obstacle* clone() override {
 		return new Dinosaur(*this);
 	}
 };
@@ -40,8 +42,8 @@ public:
 
 	virtual void draw_to_buffer() override;
 	virtual void clear_from_buffer() override;
-
-	virtual Obstacle* clone() override{
+	
+	virtual Obstacle* clone() override {
 		return new Bird(*this);
 	}
 };
@@ -54,7 +56,7 @@ public:
 	virtual void draw_to_buffer() override;
 	virtual void clear_from_buffer() override;
 
-	virtual Obstacle* clone() override{
+	virtual Obstacle* clone() override {
 		return new Car(*this);
 	}
 };
@@ -67,7 +69,7 @@ public:
 	virtual void draw_to_buffer() override;
 	virtual void clear_from_buffer() override;
 
-	virtual Obstacle* clone() override{
+	virtual Obstacle* clone() override {
 		return new Truck(*this);
 	}
 };

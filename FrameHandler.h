@@ -1,5 +1,7 @@
 //File "FrameHandler.h"
 
+#pragma once
+
 #include "console.h"
 
 enum class Symbol: char{
