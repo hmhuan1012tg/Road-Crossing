@@ -7,18 +7,16 @@
 #include <ctime>
 #include <algorithm>
 
-enum class ObstacleType{
-	Bird, Dinosaur, Car, Truck,
-};
-
 class Lane{
 private:
 	vector<Obstacle*> m_obstacles;
 	vector<int> m_start;
 	bool m_traffic_light;
-	ObstacleType m_type;
 	Direction m_dir;
 	int m_order;
+
+	void lock_move();
+	void unlock_move();
 public:
 	Lane(int, int);
 	Lane(const Lane& lane);

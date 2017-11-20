@@ -156,7 +156,7 @@ void GameManager::loop(){
 		goToXY(MAP_WIDTH / 2, MAP_HEIGHT + 3);
 		cout << p_player->get_point();
 
-		Sleep(20);
+		Sleep(16);
 	}
 }
 

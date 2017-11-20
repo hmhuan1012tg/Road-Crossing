@@ -9,17 +9,23 @@ Lane::Lane(int level, int order){
 		m_start.push_back(i);
 	random_shuffle(m_start.begin(), m_start.end());
 	m_obstacles.reserve(level);
-	m_type = ObstacleType(rand() % 4);
+	int type = rand() % 4;
 	m_dir = Direction(rand() % 2);
-	for (int i = 0; i < level; i++){
-		if (m_type == ObstacleType::Bird)
-			m_obstacles.emplace_back(new Bird(m_start[i] * 4 + 2, 1 + 4 * order, m_dir));
-		if (m_type == ObstacleType::Car)
-			m_obstacles.emplace_back(new Car(m_start[i] * 4 + 2, 1 + 4 * order, m_dir));
-		if (m_type == ObstacleType::Truck)
-			m_obstacles.emplace_back(new Truck(m_start[i] * 4 + 2, 1 + 4 * order, m_dir));
-		if (m_type == ObstacleType::Dinosaur)
-			m_obstacles.emplace_back(new Dinosaur(m_start[i] * 4 + 2, 1 + 4 * order, m_dir));
+	if (type == 0){
+		for (int i = 0; i < level; i++)
+			m_obstacles.push_back(new Bird(m_start[i] * 4 + 2, 1 + 4 * order, m_dir));
+	}
+	if (type == 1){
+		for (int i = 0; i < level; i++)
+			m_obstacles.push_back(new Dinosaur(m_start[i] * 4 + 2, 1 + 4 * order, m_dir));
+	}
+	if (type == 2){
+		for (int i = 0; i < level; i++)
+			m_obstacles.push_back(new Truck(m_start[i] * 4 + 2, 1 + 4 * order, m_dir));
+	}
+	if (type == 3){
+		for (int i = 0; i < level; i++)
+			m_obstacles.push_back(new Car(m_start[i] * 4 + 2, 1 + 4 * order, m_dir));
 	}
 	
 	m_traffic_light = false;
@@ -30,16 +36,8 @@ Lane::Lane(const Lane& lane) {
 	m_dir = lane.m_dir;
 	m_start = lane.m_start;
 	m_traffic_light = lane.m_traffic_light;
-	m_type = lane.m_type;
 	for (auto i = lane.m_obstacles.begin(); i != lane.m_obstacles.end(); i++) {
-		if (m_type == ObstacleType::Bird)
-			m_obstacles.emplace_back(new Bird((*i)->get_x(), (*i)->get_y(), (*i)->get_dir()));
-		if (m_type == ObstacleType::Car)
-			m_obstacles.emplace_back(new Car((*i)->get_x(), (*i)->get_y(), (*i)->get_dir()));
-		if (m_type == ObstacleType::Truck)
-			m_obstacles.emplace_back(new Truck((*i)->get_x(), (*i)->get_y(), (*i)->get_dir()));
-		if (m_type == ObstacleType::Dinosaur)
-			m_obstacles.emplace_back(new Dinosaur((*i)->get_x(), (*i)->get_y(), (*i)->get_dir()));
+		m_obstacles.push_back((*i)->clone());
 	}
 }
 
@@ -59,16 +57,8 @@ Lane& Lane::operator=(const Lane& lane) {
 	m_order = lane.m_order;
 	m_start = lane.m_start;
 	m_traffic_light = lane.m_traffic_light;
-	m_type = lane.m_type;
 	for (auto i = lane.m_obstacles.begin(); i != lane.m_obstacles.end(); i++) {
-		if (m_type == ObstacleType::Bird)
-			m_obstacles.emplace_back(new Bird((*i)->get_x(), (*i)->get_y(), (*i)->get_dir()));
-		if (m_type == ObstacleType::Car)
-			m_obstacles.emplace_back(new Car((*i)->get_x(), (*i)->get_y(), (*i)->get_dir()));
-		if (m_type == ObstacleType::Truck)
-			m_obstacles.emplace_back(new Truck((*i)->get_x(), (*i)->get_y(), (*i)->get_dir()));
-		if (m_type == ObstacleType::Dinosaur)
-			m_obstacles.emplace_back(new Dinosaur((*i)->get_x(), (*i)->get_y(), (*i)->get_dir()));
+		m_obstacles.push_back((*i)->clone());
 	}
 
 	return *this;

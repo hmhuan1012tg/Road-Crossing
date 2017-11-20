@@ -60,9 +60,7 @@ void Player::move_up(){
 void Player::move_down(){
 	FrameHandler::get_handler().lock();
 	clear_from_buffer();
-	if (m_pivot_y == MAP_HEIGHT - 4)
-		m_pivot_y = 1;
-	else
+	if (m_pivot_y < MAP_HEIGHT - 4)
 		m_pivot_y += 4;
 	draw_to_buffer();
 	FrameHandler::get_handler().unlock();
